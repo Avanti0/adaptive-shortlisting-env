@@ -1,31 +1,53 @@
 # Adaptive Shortlisting Environment
 
-A reinforcement learning environment for sequential candidate shortlisting under uncertainty, inspired by constraint-based feedback systems such as Wordle.
+An RL-compatible environment for sequential candidate shortlisting under uncertainty, modeling the process of identifying the optimal match within a large candidate pool through iterative evaluation and structured feedback.
 
 ## Overview
+This project models candidate or student shortlisting as a sequential decision-making problem. Instead of a single-pass filter, the system uses an iterative approach where an agent selects a candidate, receives precise feedback, and uses that information to prune the search space for the next decision.
 
-This project is inspired by the mechanics of a Wordle-solving system, where iterative guesses and structured feedback are used to progressively narrow down possible solutions.
+## Problem Statement
+- **Massive Scale**: Organizations often face candidate pools of thousands or tens of thousands.
+- **Limited Resources**: Human and computational evaluation rounds are expensive and limited.
+- **Efficiency Gap**: Traditional filtering is often static; there is a need for adaptive systems that learn to eliminate large sections of the search space with minimal steps.
 
-Building on this idea, the project generalizes the approach into a real-world shortlisting framework, where an agent selects candidates, receives evaluation feedback, and efficiently reduces the search space to identify the optimal match.
-
-The goal is to train an agent to:
-- Make informed sequential decisions
-- Maximize information gain from feedback
-- Identify the correct candidate in minimal steps
+## Solution
+The **Adaptive Shortlisting Environment** provides a framework for training agents to:
+- Perform iterative shortlisting using structured feedback signals.
+- Maximize information gain from every evaluation.
+- Minimize the number of steps required to identify the target candidate through aggressive constraint-based elimination.
 
 ## Inspiration
+While inspired by the mechanics of **Wordle** (using precise signals like Correct, Partial, and Incorrect), this project is **not a game**. It is a generalized constraint-based filtering system designed to solve high-stakes selection problems where every "guess" carries a cost.
 
-The core inspiration comes from Wordle-style feedback mechanisms:
-- **Iterative selection process**: Making successive attempts to find the target.
-- **Structured feedback signals**: Receiving precise signals (correct / partial / incorrect) about each attempt.
-- **Constraint-based elimination**: Using feedback to rapidly prune the search space of possibilities.
+## How It Works
+The environment maps real-world shortlisting logic to a symbolic system:
+- **Candidates**: Represented as symbolic tokens (currently words) in a searchable pool.
+- **Action**: Selecting a specific candidate for evaluation.
+- **Feedback**: A structured signal (Green/Yellow/Red) indicating how closely the selected candidate matches the target profile's attributes.
+- **Filtering**: Automatically eliminating candidates from the pool that are mathematically inconsistent with the received feedback.
 
-These principles are widely applicable beyond games and form the foundation of this environment.
+## Reinforcement Learning Framing
+The environment follows the standard RL interaction loop:
+- **State**: Current observation including `remaining_candidates`, `last_feedback`, `attempts`, and `candidate_ratio` (the current pool size relative to the start).
+- **Action**: Selection of a candidate string from the available pool.
+- **Reward**: Calculated as the **search space reduction**—the percentage of candidates eliminated in a single step. A terminal reward of `1.0` is given for finding the target.
+- **Done**: Triggered when the correct candidate is identified or the maximum number of attempts is reached.
 
-## Extension to Real-World Problems
+## Tasks
+The environment includes three standardized tasks to measure agent scalability:
+- **Easy**: Shortlist from a pool of 100 candidates.
+- **Medium**: Shortlist from a pool of 1,000 candidates.
+- **Hard**: Shortlist from the full dataset of over 12,000 candidates.
 
-The project reframes this mechanism as a candidate shortlisting problem, commonly seen in:
-- **Hiring and resume filtering**: Efficiently identifying the best candidate from a large pool.
-- **Student selection systems**: Matching students to programs based on iterative evaluations.
-- **Search and recommendation engines**: Refining results based on user interactions.
-- **Diagnostic decision-making**: Narrowing down possibilities through sequential testing.
+## Current Implementation
+- **RL-Ready Environment**: The `ShortlistingEnv` class is fully compatible with sequential decision-making workflows.
+- **Baseline Agent**: A heuristic-based solver is provided that utilizes filtering logic to consistently solve the tasks, serving as a benchmark for future RL models.
+
+## How to Run
+To run the environment across all tasks using the baseline agent and generate structured logs:
+```bash
+python inference.py
+```
+
+## Note
+In the current implementation, candidates are represented as symbolic tokens (words) to maintain a fast, offline-first development loop. However, the system is designed to generalize to real-world vector-based or attribute-based candidate data.
