@@ -15,12 +15,9 @@ def run_agent(task_manager, task_name, seed=None):
     done = False
     while not done:
         # Simple Baseline Agent: Pick a random candidate from the current filtered pool
-        # This is a strong baseline because the environment already does the filtering
-        # in its step() function, so picking any word from the current pool is valid.
         if env.candidates:
             action = random.choice(env.candidates)
         else:
-            # Fallback if somehow the pool is empty
             action = random.choice(env.all_candidates)
             
         state, reward, done, info = env.step(action)
@@ -29,11 +26,13 @@ def run_agent(task_manager, task_name, seed=None):
         print(f"action: {action}")
         print(f"reward: {reward:.4f}")
         print(f"done: {str(done).lower()}")
+        print(f"attempt: {state['attempts']}")
+        print(f"remaining_candidates: {state['remaining_candidates']}")
+        print(f"reduction: {reward:.4f}")
         
     final_score = grade_task(env)
     print(f"[END]")
     print(f"score: {final_score:.2f}")
-    print("-" * 20)
 
 if __name__ == "__main__":
     # Initialize Environment and Task Manager
