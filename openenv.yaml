@@ -1,0 +1,27 @@
+name: adaptive-shortlisting-env
+description: RL environment for sequential candidate shortlisting using structured feedback
+version: 0.1.0
+
+# Environment Configuration
+entrypoint: env.shortlisting_env:ShortlistingEnv
+inference:
+  script: inference.py
+
+# Task Definitions
+tasks:
+  - name: easy
+    description: "Shortlist from a small pool of 100 candidates."
+    difficulty: easy
+  - name: medium
+    description: "Shortlist from a medium pool of 1,000 candidates."
+    difficulty: medium
+  - name: hard
+    description: "Shortlist from the full pool of over 12,000 candidates."
+    difficulty: hard
+
+# Environment Variables
+environment:
+  variables:
+    - API_BASE_URL
+    - MODEL_NAME
+    - HF_TOKEN
