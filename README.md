@@ -8,54 +8,97 @@ sdk: docker
 
 # Adaptive Shortlisting Environment
 
-An RL-compatible environment for sequential candidate shortlisting under uncertainty, modeling the process of identifying the optimal match within a large candidate pool through iterative evaluation and structured feedback.
+An interactive system that models candidate shortlisting as a **sequential decision-making process**, efficiently reducing large candidate pools using structured feedback.
 
-## Overview
-This project models candidate or student shortlisting as a sequential decision-making problem. Instead of a single-pass filter, the system uses an iterative approach where an agent selects a candidate, receives precise feedback, and uses that information to prune the search space for the next decision.
+---
 
-## Problem Statement
-- **Massive Scale**: Organizations often face candidate pools of thousands or tens of thousands.
-- **Limited Resources**: Human and computational evaluation rounds are expensive and limited.
-- **Efficiency Gap**: Traditional filtering is often static; there is a need for adaptive systems that learn to eliminate large sections of the search space with minimal steps.
+## 🚀 Live Demo
+Select a difficulty level and run the simulation to watch how the system progressively eliminates candidates step-by-step.
 
-## Solution
-The **Adaptive Shortlisting Environment** provides a framework for training agents to:
-- Perform iterative shortlisting using structured feedback signals.
-- Maximize information gain from every evaluation.
-- Minimize the number of steps required to identify the target candidate through aggressive constraint-based elimination.
+---
 
-## Inspiration
-While inspired by the mechanics of **Wordle** (using precise signals like Correct, Partial, and Incorrect), this project is **not a game**. It is a generalized constraint-based filtering system designed to solve high-stakes selection problems where every "guess" carries a cost.
+## 🧠 What This Does
 
-## How It Works
-The environment maps real-world shortlisting logic to a symbolic system:
-- **Candidates**: Represented as symbolic tokens (currently words) in a searchable pool.
-- **Action**: Selecting a specific candidate for evaluation.
-- **Feedback**: A structured signal (Green/Yellow/Red) indicating how closely the selected candidate matches the target profile's attributes.
-- **Filtering**: Automatically eliminating candidates from the pool that are mathematically inconsistent with the received feedback.
+Instead of filtering candidates in a single pass, this system:
 
-## Reinforcement Learning Framing
-The environment follows the standard RL interaction loop:
-- **State**: Current observation including `remaining_candidates`, `last_feedback`, `attempts`, and `candidate_ratio` (the current pool size relative to the start).
-- **Action**: Selection of a candidate string from the available pool.
-- **Reward**: Calculated as the **search space reduction**—the percentage of candidates eliminated in a single step. A terminal reward of `1.0` is given for finding the target.
-- **Done**: Triggered when the correct candidate is identified or the maximum number of attempts is reached.
+- Evaluates one candidate at a time  
+- Uses structured feedback to eliminate inconsistent candidates  
+- Rapidly reduces the search space  
+- Identifies the optimal candidate in minimal steps  
 
-## Tasks
-The environment includes three standardized tasks to measure agent scalability:
-- **Easy**: Shortlist from a pool of 100 candidates.
-- **Medium**: Shortlist from a pool of 1,000 candidates.
-- **Hard**: Shortlist from the full dataset of over 12,000 candidates.
+---
 
-## Current Implementation
-- **RL-Ready Environment**: The `ShortlistingEnv` class is fully compatible with sequential decision-making workflows.
-- **Baseline Agent**: A heuristic-based solver is provided that utilizes filtering logic to consistently solve the tasks, serving as a benchmark for future RL models.
+## ⚡ Why This Matters
 
-## How to Run
-To run the environment across all tasks using the baseline agent and generate structured logs:
+Real-world systems often face:
+- Thousands of candidates  
+- Limited evaluation resources  
+- Expensive decision-making steps  
+
+This approach enables:
+- Faster shortlisting  
+- Reduced computational and human cost  
+- Smarter, adaptive filtering strategies  
+
+---
+
+## 🎮 Interactive Simulation
+
+- Choose difficulty: **Easy / Medium / Hard**
+- Run the agent
+- Observe:
+  - Step-by-step candidate selection  
+  - Search space reduction  
+  - Final efficiency score  
+
+---
+
+## 🧩 Key Concepts
+
+- **Step** → One evaluation round (one candidate tested)  
+- **Feedback** → Signal used to eliminate candidates  
+- **Adaptive Filtering** → Dynamically shrinking the pool  
+- **Final Score** → Measures overall efficiency  
+
+---
+
+## ⚙️ How It Works
+
+The system maps shortlisting into a structured environment:
+
+- **Candidates** → Represented as symbolic tokens (words)  
+- **Action** → Selecting a candidate  
+- **Feedback** → Green / Yellow / Red signals  
+- **Filtering** → Eliminates inconsistent candidates  
+
+---
+
+## 🤖 Reinforcement Learning Framing
+
+- **State** → Remaining candidates + history  
+- **Action** → Candidate selection  
+- **Reward** → Reduction in search space  
+- **Goal** → Maximize information gain per step  
+
+---
+
+## 📊 Tasks
+
+- **Easy** → ~100 candidates  
+- **Medium** → ~1,000 candidates  
+- **Hard** → ~12,000+ candidates  
+
+---
+
+## 🛠️ Current Implementation
+
+- RL-compatible environment (`ShortlistingEnv`)  
+- Baseline agent for demonstration  
+- Interactive web interface using FastAPI  
+
+---
+
+## ▶️ Run Locally
+
 ```bash
 python inference.py
-```
-
-## Note
-In the current implementation, candidates are represented as symbolic tokens (words) to maintain a fast, offline-first development loop. However, the system is designed to generalize to real-world vector-based or attribute-based candidate data.
