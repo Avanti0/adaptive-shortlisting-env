@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adaptive-shortlisting-env"
+version = "0.1.0"
+description = "RL environment for sequential candidate shortlisting using structured feedback"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "python-multipart",
+    "openai",
+    "pydantic"
+]
+
+[tool.setuptools]
+packages = ["env"]
