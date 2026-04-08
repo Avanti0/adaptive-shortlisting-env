@@ -38,7 +38,12 @@ def run_inference():
 def reset(seed: Optional[int] = None, task: Optional[str] = "easy"):
     """Resets the environment for a given task and seed."""
     state = task_manager.run_task(task, seed=seed)
-    return state
+    return {
+        "observation": state,
+        "reward": 0.0,
+        "done": False,
+        "info": {"task": task, "success": False}
+    }
 
 @app.post("/step")
 def step(action_payload: ShortlistingAction):
