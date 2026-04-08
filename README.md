@@ -6,6 +6,8 @@ colorTo: purple
 sdk: docker
 ---
 LIVE DEMO = [https://huggingface.co/spaces/avanti29/adaptive-shortlisting-env]
+- Root endpoint: / 
+- Run inference: /run
 # Adaptive Shortlisting Environment
 
 An interactive system that models candidate shortlisting as a **sequential decision-making process**, efficiently reducing large candidate pools using structured feedback.
