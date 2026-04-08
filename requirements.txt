@@ -1,3 +1,4 @@
 # No external dependencies required for the current implementation
 fastapi
 uvicorn
+python-multipart
