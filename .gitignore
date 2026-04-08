@@ -4,3 +4,6 @@ target/
 *.class
 __pycache__/
 *.pyc
+wordlebot_inspiration/target/
+*.jar
+target/
