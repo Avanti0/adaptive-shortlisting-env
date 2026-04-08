@@ -34,7 +34,7 @@ def run_inference():
         return {"error": str(e)}
 
 # OpenEnv Compliance Endpoints
-@app.post("/reset")
+@app.api_route("/reset", methods=["GET", "POST"])
 def reset(seed: Optional[int] = None, task: Optional[str] = "easy"):
     """Resets the environment for a given task and seed."""
     state = task_manager.run_task(task, seed=seed)
@@ -45,10 +45,17 @@ def reset(seed: Optional[int] = None, task: Optional[str] = "easy"):
         "info": {"task": task, "success": False}
     }
 
-@app.post("/step")
-def step(action_payload: ShortlistingAction):
+@app.api_route("/step", methods=["GET", "POST"])
+def step(action_payload: Optional[ShortlistingAction] = None, action: Optional[str] = None):
     """Performs a step in the environment."""
-    state, reward, done, info = env_instance.step(action_payload.action)
+    final_action = action
+    if action_payload and action_payload.action:
+        final_action = action_payload.action
+    
+    if not final_action:
+        return {"error": "No action provided"}
+
+    state, reward, done, info = env_instance.step(final_action)
     return {
         "observation": state,
         "reward": reward,

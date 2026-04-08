@@ -5,9 +5,8 @@ WORKDIR /app
 # Copy the entire project to the container
 COPY . /app
 
-# Install any dependencies (currently none but included for future use)
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Run the inference script by default
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
-
+# Run the OpenEnv server using the correct module path
+CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]

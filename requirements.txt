@@ -1,5 +1,7 @@
-# No external dependencies required for the current implementation
+# Required dependencies for OpenEnv multi-mode deployment
 fastapi
 uvicorn
 python-multipart
 openai
+pydantic
+openenv-core>=0.2.0
