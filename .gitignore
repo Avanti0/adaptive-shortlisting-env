@@ -7,3 +7,10 @@ __pycache__/
 wordlebot_inspiration/target/
 *.jar
 target/
+# Ignore build files
+target/
+*.jar
+*.class
+*.log
+venv/
+__pycache__/
