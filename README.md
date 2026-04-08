@@ -1,3 +1,11 @@
+---
+title: Adaptive Shortlisting Env
+emoji: 🚀
+colorFrom: blue
+colorTo: purple
+sdk: docker
+---
+
 # Adaptive Shortlisting Environment
 
 An RL-compatible environment for sequential candidate shortlisting under uncertainty, modeling the process of identifying the optimal match within a large candidate pool through iterative evaluation and structured feedback.
