@@ -1,6 +1,21 @@
+spec_version: 1
 name: adaptive-shortlisting-env
+type: space
+runtime: fastapi
+app: app:app
+port: 7860
 description: RL environment for sequential candidate shortlisting using structured feedback
 version: 0.1.0
+
+# Models for OpenEnv Compliance
+action_model: models:ShortlistingAction
+observation_model: models:ShortlistingObservation
+
+# API Endpoints for OpenEnv Compliance
+api:
+  reset: /reset
+  step: /step
+  state: /state
 
 # Environment Configuration
 entrypoint: env.shortlisting_env:ShortlistingEnv
