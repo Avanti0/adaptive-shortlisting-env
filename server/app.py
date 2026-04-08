@@ -3,7 +3,7 @@ from typing import Optional
 import subprocess
 from env.shortlisting_env import ShortlistingEnv
 from env.tasks import TaskManager
-from models import ShortlistingAction, ShortlistingObservation
+from server.models import ShortlistingAction, ShortlistingObservation
 
 app = FastAPI()
 
