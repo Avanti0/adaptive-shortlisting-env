@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Body
 from typing import Optional
 import subprocess
+import uvicorn
 from env.shortlisting_env import ShortlistingEnv
 from env.tasks import TaskManager
 from server.models import ShortlistingAction, ShortlistingObservation
@@ -10,6 +11,12 @@ app = FastAPI()
 # Global environment instance for OpenEnv compliance
 env_instance = ShortlistingEnv()
 task_manager = TaskManager(env_instance)
+
+def main():
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+if __name__ == "__main__":
+    main()
 
 @app.get("/")
 def home():
