@@ -31,13 +31,13 @@ def get_action(env):
             action = random.choice(candidates)
     except Exception:
         pass
-    
+
     if not action:
         try:
             action = random.choice(env.all_candidates)
         except Exception:
             action = "candidate_0"
-    
+
     return action
 
 
@@ -47,27 +47,28 @@ def run_agent(task_manager, task_name, seed=None):
     steps = 0
     score = 0.0
     success = False
-    started = False
-    
+
+    # START
     try:
         env = task_manager.env
         task_manager.run_task(task_name, seed=seed)
-        started = True
         print(f"[START] task={task_name} env=shortlisting model={MODEL_NAME}", flush=True)
     except Exception as e:
+        err = str(e).replace("\n", " ").strip()
         print(f"[START] task={task_name} env=shortlisting model={MODEL_NAME}", flush=True)
-        print(f"[STEP] step=1 action=_error_ reward=0.00 done=true error={str(e).replace(chr(10), ' ').strip()}", flush=True)
+        print(f"[STEP] step=1 action=_error_ reward=0.00 done=true error={err}", flush=True)
         print(f"[END] success=false steps=1 score=0.00 rewards=0.00", flush=True)
         return
-    
+
+    # STEPS
     try:
         done = False
         while not done:
             action = get_action(env)
-            
+
             if not action:
                 action = "candidate_0"
-            
+
             try:
                 state, reward, done, info = env.step(action)
                 error = "null"
@@ -75,25 +76,24 @@ def run_agent(task_manager, task_name, seed=None):
                 reward = 0.0
                 done = True
                 error = str(e).replace("\n", " ").strip() if e else "null"
-            
+
             steps += 1
             rewards.append(reward)
-            
+
             print(f"[STEP] step={steps} action={action} reward={reward:.2f} done={str(done).lower()} error={error}", flush=True)
-        
+
         score = grade_task(env)
         score = max(0.0, min(score, 1.0))
         success = score >= 0.5
-    except Exception as e:
+
+    except Exception:
         rewards_str = ",".join([f"{r:.2f}" for r in rewards]) if rewards else "0.00"
         print(f"[END] success=false steps={steps} score=0.00 rewards={rewards_str}", flush=True)
         return
-    
+
+    # END
     rewards_str = ",".join([f"{r:.2f}" for r in rewards])
-    print(
-        f"[END] success={str(success).lower()} steps={steps} score={score:.2f} rewards={rewards_str}",
-        flush=True
-    )
+    print(f"[END] success={str(success).lower()} steps={steps} score={score:.2f} rewards={rewards_str}", flush=True)
 
 
 if __name__ == "__main__":
@@ -101,20 +101,18 @@ if __name__ == "__main__":
         env = ShortlistingEnv()
         tm = TaskManager(env)
     except Exception as e:
-        print(f"[START] task=easy env=shortlisting model={MODEL_NAME}", flush=True)
-        print(f"[STEP] step=1 action=_error_ reward=0.00 done=true error={str(e).replace(chr(10), ' ').strip()}", flush=True)
-        print(f"[END] success=false steps=1 score=0.00 rewards=0.00", flush=True)
-        print(f"[START] task=medium env=shortlisting model={MODEL_NAME}", flush=True)
-        print(f"[STEP] step=1 action=_error_ reward=0.00 done=true error={str(e).replace(chr(10), ' ').strip()}", flush=True)
-        print(f"[END] success=false steps=1 score=0.00 rewards=0.00", flush=True)
-        print(f"[START] task=hard env=shortlisting model={MODEL_NAME}", flush=True)
-        print(f"[STEP] step=1 action=_error_ reward=0.00 done=true error={str(e).replace(chr(10), ' ').strip()}", flush=True)
-        print(f"[END] success=false steps=1 score=0.00 rewards=0.00", flush=True)
+        err = str(e).replace("\n", " ").strip()
+
+        for task in ["easy", "medium", "hard"]:
+            print(f"[START] task={task} env=shortlisting model={MODEL_NAME}", flush=True)
+            print(f"[STEP] step=1 action=_error_ reward=0.00 done=true error={err}", flush=True)
+            print(f"[END] success=false steps=1 score=0.00 rewards=0.00", flush=True)
+
         exit(1)
-    
+
     tasks = ["easy", "medium", "hard"]
     seed = 42
-    
+
     for task in tasks:
         run_agent(tm, task, seed)
         seed += 1
