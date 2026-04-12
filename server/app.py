@@ -12,6 +12,23 @@ task_manager = TaskManager(env_instance)
 
 # ---- EXISTING ROUTES (keep yours here, unchanged) ----
 # (Do NOT delete your endpoints — just keep them below)
+@app.post("/reset")
+def reset():
+    env_instance.reset()
+    return {"status": "reset done"}
+
+
+@app.post("/step")
+def step(action: dict):
+    act = action.get("action", "candidate_0")
+    state, reward, done, info = env_instance.step(act)
+
+    return {
+        "state": state,
+        "reward": reward,
+        "done": done,
+        "info": info
+    }
 
 
 # ---- ENTRYPOINT FIX ----
@@ -21,3 +38,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
